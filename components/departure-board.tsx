@@ -37,43 +37,8 @@ export function DepartureBoard() {
     });
   };
 
-  // API key missing state
-  if (data?.error && data.error.includes("MTA_API_KEY")) {
-    return (
-      <div className="h-screen flex flex-col items-center justify-center gap-6 p-8">
-        <h1 className="text-2xl led-text tracking-widest uppercase">
-          SubwayMate
-        </h1>
-        <div className="max-w-lg text-center flex flex-col gap-4">
-          <p className="text-[var(--foreground-dim)] text-sm leading-relaxed">
-            An MTA API key is required to fetch live subway data.
-          </p>
-          <div className="bg-[var(--station-header)] border border-[var(--divider)] p-4 rounded text-left flex flex-col gap-2">
-            <p className="text-xs text-[var(--direction-label)] tracking-wider uppercase">
-              Setup Instructions
-            </p>
-            <ol className="text-sm leading-relaxed flex flex-col gap-1.5 text-[var(--foreground)]">
-              <li>
-                {"1. Visit "}
-                <span className="text-[var(--direction-label)]">
-                  api.mta.info
-                </span>
-                {" and create a free account"}
-              </li>
-              <li>{"2. Navigate to 'Access Key' to generate your key"}</li>
-              <li>
-                {"3. Add "}
-                <span className="text-[var(--direction-label)]">
-                  MTA_API_KEY
-                </span>
-                {" as an environment variable"}
-              </li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const isLive = !error && !isLoading && data && !data.error && !data.mock;
+  const isDemo = data?.mock === true;
 
   return (
     <div className="h-screen flex flex-col">
@@ -83,8 +48,11 @@ export function DepartureBoard() {
           <span className="text-xs tracking-[0.25em] uppercase led-text">
             SubwayMate
           </span>
-          {!error && !isLoading && data && !data.error && (
+          {isLive && (
             <span className="live-pulse inline-block w-2 h-2 rounded-full bg-[#00c853]" aria-label="Live data indicator" />
+          )}
+          {isDemo && (
+            <span className="text-[10px] tracking-widest text-[var(--foreground-dim)] uppercase">Demo</span>
           )}
         </div>
         <time className="text-sm tabular-nums led-text" dateTime={currentTime.toISOString()}>

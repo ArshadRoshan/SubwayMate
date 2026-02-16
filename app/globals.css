@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme inline {
+  --font-mono: 'Share Tech Mono', ui-monospace, monospace;
+}
+
 :root {
   --background: #000000;
   --foreground: #ff9a1e;

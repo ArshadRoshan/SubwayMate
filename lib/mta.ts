@@ -96,6 +96,7 @@ function parseFeed(buffer: Uint8Array): Departure[] {
           arrivalTime,
           minutesAway,
           tripId,
+          stationKey,
         });
       }
     }
@@ -130,25 +131,15 @@ export async function getDepartures(): Promise<DeparturesResponse> {
     return true;
   });
 
-  // Group by station
+  // Group by station using the stationKey assigned during parsing
   const stationMap: Record<string, Departure[]> = {
     DEKALB: [],
     JAY_ST: [],
   };
 
   for (const dep of uniqueDepartures) {
-    // Determine which station based on the departure info
-    // We need to re-check stop IDs, but since we already filtered,
-    // we can use the line to determine station
-    const dekalbLines = ["B", "D", "N", "Q", "R"];
-    const jayStLines = ["A", "C", "F", "R"];
-
-    // R serves both stations, so we'll add to both if applicable
-    if (dekalbLines.includes(dep.line)) {
-      stationMap.DEKALB.push(dep);
-    }
-    if (jayStLines.includes(dep.line)) {
-      stationMap.JAY_ST.push(dep);
+    if (stationMap[dep.stationKey]) {
+      stationMap[dep.stationKey].push(dep);
     }
   }
 

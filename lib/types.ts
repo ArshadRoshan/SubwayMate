@@ -6,6 +6,7 @@ export interface Departure {
   arrivalTime: number; // Unix timestamp in seconds
   minutesAway: number;
   tripId: string;
+  stationKey: string;
 }
 
 export interface StationDepartures {
@@ -19,4 +20,5 @@ export interface DeparturesResponse {
   stations: StationDepartures[];
   lastUpdated: number;
   error?: string;
+  mock?: boolean;
 }
