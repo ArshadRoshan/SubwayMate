@@ -5,21 +5,14 @@
 }
 
 :root {
-  --background: #000000;
+  --background: #0a0a0a;
   --foreground: #ff9a1e;
-  --foreground-dim: #7a4a0e;
-  --station-header: #1a1a1a;
-  --divider: #2a2a2a;
+  --foreground-dim: #5a3a0e;
+  --foreground-bright: #ffb84d;
+  --station-header: #111111;
+  --divider: #1e1e1e;
   --direction-label: #cc7a00;
-  --mta-blue: #0039a6;
-  --mta-orange: #ff6319;
-  --mta-yellow: #fccc0a;
-  --mta-red: #ee352e;
-  --mta-green: #00933c;
-  --mta-purple: #b933ad;
-  --mta-light-green: #6cbe45;
-  --mta-brown: #996633;
-  --mta-gray: #a7a9ac;
+  --arriving: #ff3b30;
   --radius: 0.25rem;
 }
 
@@ -29,16 +22,32 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-mono), ui-monospace, monospace;
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
   cursor: none;
+  user-select: none;
 }
 
-/* Pulsing dot for live indicator */
+/* LED-style glow on text */
+.led-text {
+  text-shadow: 0 0 6px rgba(255, 154, 30, 0.35);
+}
+
+.led-text-bright {
+  text-shadow: 0 0 10px rgba(255, 184, 77, 0.5);
+}
+
+/* Pulse for live indicator */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
@@ -48,12 +57,34 @@ body {
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* Subtle LED glow effect on text */
-.led-text {
-  text-shadow: 0 0 8px rgba(255, 154, 30, 0.4);
+/* Flash animation for arriving trains */
+@keyframes arriving-flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
-/* Scrollbar hiding for kiosk mode */
+.arriving-text {
+  animation: arriving-flash 1.2s ease-in-out infinite;
+  color: var(--arriving);
+  text-shadow: 0 0 12px rgba(255, 59, 48, 0.6);
+}
+
+/* Subtle CRT/LCD scanline overlay */
+.scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 4px
+  );
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Scrollbar hiding */
 ::-webkit-scrollbar {
   display: none;
 }

@@ -7,14 +7,12 @@ import type { DeparturesResponse } from "@/lib/types";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-const REFRESH_INTERVAL = 30_000; // 30 seconds
-
 export function DepartureBoard() {
   const { data, error, isLoading } = useSWR<DeparturesResponse>(
     "/api/departures",
     fetcher,
     {
-      refreshInterval: REFRESH_INTERVAL,
+      refreshInterval: 30_000,
       revalidateOnFocus: false,
       dedupingInterval: 10_000,
     }
@@ -22,56 +20,61 @@ export function DepartureBoard() {
 
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Update clock every second
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-    });
-  };
-
   const isLive = !error && !isLoading && data && !data.error && !data.mock;
   const isDemo = data?.mock === true;
 
+  const timeStr = currentTime.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+
   return (
-    <div className="h-screen flex flex-col">
-      {/* Top status bar */}
-      <header className="flex items-center justify-between px-4 py-1.5 bg-[var(--station-header)] border-b border-[var(--divider)]">
+    <div className="scanlines h-screen flex flex-col bg-[var(--background)]">
+      {/* Header bar */}
+      <header className="flex items-center justify-between px-3 py-1 bg-[var(--station-header)] border-b border-[var(--divider)]">
         <div className="flex items-center gap-2">
-          <span className="text-xs tracking-[0.25em] uppercase led-text">
+          <span className="text-[11px] tracking-[0.3em] uppercase led-text">
             SubwayMate
           </span>
           {isLive && (
-            <span className="live-pulse inline-block w-2 h-2 rounded-full bg-[#00c853]" aria-label="Live data indicator" />
+            <span
+              className="live-pulse inline-block w-1.5 h-1.5 rounded-full bg-[#00c853]"
+              aria-label="Live data"
+            />
           )}
           {isDemo && (
-            <span className="text-[10px] tracking-widest text-[var(--foreground-dim)] uppercase">Demo</span>
+            <span className="text-[9px] tracking-[0.2em] text-[var(--foreground-dim)] uppercase">
+              Demo
+            </span>
           )}
         </div>
-        <time className="text-sm tabular-nums led-text" dateTime={currentTime.toISOString()}>
-          {formatTime(currentTime)}
+        <time
+          className="text-[13px] tabular-nums led-text"
+          dateTime={currentTime.toISOString()}
+        >
+          {timeStr}
         </time>
       </header>
 
-      {/* Main content */}
+      {/* Station columns */}
       <main className="flex-1 flex min-h-0">
         {isLoading && !data ? (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-[var(--foreground-dim)] text-sm tracking-wider animate-pulse">
-              Loading departures...
+            <p className="text-[var(--foreground-dim)] text-xs tracking-[0.2em] animate-pulse uppercase">
+              Loading...
             </p>
           </div>
         ) : error ? (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-[#ff3b30] text-sm tracking-wider">
-              Connection error. Retrying...
+            <p className="text-[var(--arriving)] text-xs tracking-[0.2em]">
+              Connection error
             </p>
           </div>
         ) : data?.stations ? (
@@ -79,7 +82,10 @@ export function DepartureBoard() {
             {data.stations.map((station, i) => (
               <div key={station.stationKey} className="flex flex-1 min-w-0">
                 {i > 0 && (
-                  <div className="w-px bg-[var(--divider)]" role="separator" />
+                  <div
+                    className="w-px bg-[var(--divider)]"
+                    role="separator"
+                  />
                 )}
                 <StationBoard station={station} />
               </div>
@@ -88,14 +94,18 @@ export function DepartureBoard() {
         ) : null}
       </main>
 
-      {/* Bottom status bar */}
-      <footer className="flex items-center justify-between px-4 py-1 bg-[var(--station-header)] border-t border-[var(--divider)]">
-        <span className="text-[10px] text-[var(--foreground-dim)] tracking-wider">
-          DeKalb Av / Jay St-MetroTech
+      {/* Footer */}
+      <footer className="flex items-center justify-between px-3 py-0.5 bg-[var(--station-header)] border-t border-[var(--divider)]">
+        <span className="text-[9px] text-[var(--foreground-dim)] tracking-[0.15em] uppercase">
+          DeKalb Av {"/"} Jay St-MetroTech
         </span>
         {data?.lastUpdated && (
-          <span className="text-[10px] text-[var(--foreground-dim)] tabular-nums tracking-wider">
-            Updated {new Date(data.lastUpdated * 1000).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
+          <span className="text-[9px] text-[var(--foreground-dim)] tabular-nums tracking-wider">
+            {new Date(data.lastUpdated * 1000).toLocaleTimeString("en-US", {
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            })}
           </span>
         )}
       </footer>

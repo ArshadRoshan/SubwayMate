@@ -11,51 +11,67 @@ export function StationBoard({ station }: StationBoardProps) {
   const hasAnyTrains = hasNorthbound || hasSouthbound;
 
   return (
-    <section className="flex flex-col flex-1 min-w-0" aria-label={`${station.stationName} departures`}>
-      {/* Station header */}
-      <header className="px-4 py-2 bg-[var(--station-header)] border-b border-[var(--divider)]">
-        <h2 className="text-lg tracking-widest uppercase led-text text-balance">
+    <section
+      className="flex flex-col flex-1 min-w-0"
+      aria-label={`${station.stationName} departures`}
+    >
+      {/* Station name */}
+      <div className="px-3 py-1.5 bg-[var(--station-header)] border-b border-[var(--divider)]">
+        <h2 className="text-sm tracking-[0.2em] uppercase led-text-bright text-[var(--foreground-bright)] truncate">
           {station.stationName}
         </h2>
-      </header>
+      </div>
 
-      <div className="flex-1 px-4 py-2 flex flex-col gap-1 overflow-hidden">
+      {/* Departure lists */}
+      <div className="flex-1 flex flex-col overflow-hidden">
         {!hasAnyTrains && (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-[var(--foreground-dim)] text-sm tracking-wider">
-              No upcoming trains
+            <p className="text-[var(--foreground-dim)] text-[10px] tracking-[0.2em] uppercase">
+              No trains
             </p>
           </div>
         )}
 
-        {/* Manhattan-bound (Northbound) */}
+        {/* Northbound / Manhattan */}
         {hasNorthbound && (
-          <div>
-            <h3 className="text-xs tracking-[0.2em] uppercase text-[var(--direction-label)] mb-1">
-              Manhattan
-            </h3>
+          <div className="px-3 pt-1.5 pb-1">
+            <DirectionHeader label={station.northbound[0]?.directionLabel || "Manhattan"} />
             <div className="flex flex-col">
               {station.northbound.map((dep) => (
-                <TrainRow key={`${dep.tripId}-N`} departure={dep} />
+                <TrainRow key={dep.tripId} departure={dep} />
               ))}
             </div>
           </div>
         )}
 
-        {/* Brooklyn-bound (Southbound) */}
+        {/* Divider between directions */}
+        {hasNorthbound && hasSouthbound && (
+          <div className="mx-3 border-t border-[var(--divider)]" role="separator" />
+        )}
+
+        {/* Southbound / Brooklyn */}
         {hasSouthbound && (
-          <div className={hasNorthbound ? "mt-2" : ""}>
-            <h3 className="text-xs tracking-[0.2em] uppercase text-[var(--direction-label)] mb-1">
-              Brooklyn
-            </h3>
+          <div className="px-3 pt-1.5 pb-1">
+            <DirectionHeader label={station.southbound[0]?.directionLabel || "Brooklyn"} />
             <div className="flex flex-col">
               {station.southbound.map((dep) => (
-                <TrainRow key={`${dep.tripId}-S`} departure={dep} />
+                <TrainRow key={dep.tripId} departure={dep} />
               ))}
             </div>
           </div>
         )}
       </div>
     </section>
+  );
+}
+
+function DirectionHeader({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-2 mb-0.5">
+      <span className="text-[10px] tracking-[0.25em] uppercase text-[var(--direction-label)]">
+        {label}
+      </span>
+      <span className="text-[var(--direction-label)] text-[8px]">{">>>"}</span>
+    </div>
   );
 }
