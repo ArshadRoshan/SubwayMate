@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #ff9a1e;
+  --foreground-dim: #7a4a0e;
+  --station-header: #1a1a1a;
+  --divider: #2a2a2a;
+  --direction-label: #cc7a00;
+  --mta-blue: #0039a6;
+  --mta-orange: #ff6319;
+  --mta-yellow: #fccc0a;
+  --mta-red: #ee352e;
+  --mta-green: #00933c;
+  --mta-purple: #b933ad;
+  --mta-light-green: #6cbe45;
+  --mta-brown: #996633;
+  --mta-gray: #a7a9ac;
+  --radius: 0.25rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+/* Pulsing dot for live indicator */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.live-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Subtle LED glow effect on text */
+.led-text {
+  text-shadow: 0 0 8px rgba(255, 154, 30, 0.4);
+}
+
+/* Scrollbar hiding for kiosk mode */
+::-webkit-scrollbar {
+  display: none;
+}
