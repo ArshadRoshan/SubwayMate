@@ -68,7 +68,7 @@ export default function StationBoard({ station }: StationBoardProps) {
                 padding: '8px',
                 textAlign: 'center',
                 color: '#666',
-                fontSize: '10px',
+                fontSize: '14px',
               }}
             >
               No trains
@@ -108,7 +108,7 @@ export default function StationBoard({ station }: StationBoardProps) {
       >
         <h2
           style={{
-            fontSize: '11px',
+            fontSize: '22px',
             fontWeight: 'bold',
             margin: 0,
           }}
@@ -121,7 +121,7 @@ export default function StationBoard({ station }: StationBoardProps) {
               display: 'flex',
               alignItems: 'center',
               gap: '2px',
-              fontSize: '9px',
+              fontSize: '15px',
               color: '#888',
               fontWeight: 500,
             }}
@@ -130,13 +130,13 @@ export default function StationBoard({ station }: StationBoardProps) {
               src={walkIcon}
               alt="Walking"
               style={{
-                height: '10px',
+                height: '16px',
                 width: 'auto',
                 opacity: 0.7,
                 objectFit: 'contain'
               }}
             />
-            <span>{station.walkingMinutes}m</span>
+            <span>{station.walkingMinutes} min</span>
           </div>
         )}
       </div>

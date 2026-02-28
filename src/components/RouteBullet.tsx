@@ -9,9 +9,9 @@ export default function RouteBullet({ route, size = 'medium' }: RouteBulletProps
   const backgroundColor = ROUTE_COLORS[route] || '#808183';
 
   const sizeStyles = {
-    small: { width: '16px', height: '16px', fontSize: '10px' },
-    medium: { width: '24px', height: '24px', fontSize: '14px' },
-    large: { width: '32px', height: '32px', fontSize: '18px' },
+    small: { width: '24px', height: '24px', fontSize: '14px' },
+    medium: { width: '32px', height: '32px', fontSize: '18px' },
+    large: { width: '40px', height: '40px', fontSize: '22px' },
   };
 
   const style = {
