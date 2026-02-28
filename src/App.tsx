@@ -115,8 +115,8 @@ function App() {
     <div
       style={{
         height: '100vh',
-        padding: '12px',
-        paddingBottom: '60px',
+        padding: '4px',
+        paddingBottom: '30px',
         backgroundColor: '#000',
         display: 'flex',
         flexDirection: 'column',
@@ -124,7 +124,7 @@ function App() {
     >
       <header
         style={{
-          marginBottom: '12px',
+          marginBottom: '4px',
           display: 'flex',
           justifyContent: 'flex-end',
           alignItems: 'center',
@@ -133,7 +133,7 @@ function App() {
       >
         <div
           style={{
-            fontSize: '20px',
+            fontSize: '12px',
             color: '#888',
             fontWeight: 500,
           }}
@@ -158,30 +158,27 @@ function App() {
       <div
         style={{
           position: 'fixed',
-          bottom: '10px',
-          right: '10px',
-          padding: '8px 12px',
+          bottom: '4px',
+          right: '4px',
+          padding: '4px 6px',
           backgroundColor: '#333',
-          borderRadius: '4px',
-          fontSize: '12px',
+          borderRadius: '2px',
+          fontSize: '9px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '4px',
+          gap: '2px',
         }}
       >
         {useMockData && (
-          <div style={{ color: '#FFD700' }}>Using Mock Data</div>
+          <div style={{ color: '#FFD700' }}>Mock</div>
         )}
         {!useMockData && lastUpdate && (
           <div style={{ color: '#6CBE45' }}>
-            Live • Updated {lastUpdate.toLocaleTimeString('en-US', {
-              hour: 'numeric',
-              minute: '2-digit'
-            })}
+            Live
           </div>
         )}
         {isLoading && (
-          <div style={{ color: '#888' }}>Loading...</div>
+          <div style={{ color: '#888' }}>...</div>
         )}
       </div>
     </div>

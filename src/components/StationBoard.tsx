@@ -26,10 +26,10 @@ export default function StationBoard({ station }: StationBoardProps) {
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       <div
         style={{
-          padding: '8px 12px',
+          padding: '3px 4px',
           backgroundColor: '#222',
           borderBottom: '1px solid #444',
-          fontSize: '16px',
+          fontSize: '9px',
           fontWeight: 'bold',
           color: '#aaa',
         }}
@@ -40,10 +40,10 @@ export default function StationBoard({ station }: StationBoardProps) {
         {trains.length === 0 ? (
           <div
             style={{
-              padding: '16px',
+              padding: '8px',
               textAlign: 'center',
               color: '#666',
-              fontSize: '14px',
+              fontSize: '10px',
             }}
           >
             No trains
@@ -61,9 +61,9 @@ export default function StationBoard({ station }: StationBoardProps) {
     <div
       style={{
         backgroundColor: '#1a1a1a',
-        borderRadius: '6px',
+        borderRadius: '3px',
         overflow: 'hidden',
-        marginBottom: '12px',
+        marginBottom: '4px',
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
@@ -71,18 +71,18 @@ export default function StationBoard({ station }: StationBoardProps) {
     >
       <div
         style={{
-          padding: '10px 16px',
+          padding: '4px 6px',
           backgroundColor: '#2a2a2a',
-          borderBottom: '2px solid #444',
+          borderBottom: '1px solid #444',
           flexShrink: 0,
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
+          gap: '4px',
         }}
       >
         <h2
           style={{
-            fontSize: '24px',
+            fontSize: '11px',
             fontWeight: 'bold',
             margin: 0,
           }}
@@ -94,8 +94,8 @@ export default function StationBoard({ station }: StationBoardProps) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              fontSize: '16px',
+              gap: '2px',
+              fontSize: '9px',
               color: '#888',
               fontWeight: 500,
             }}
@@ -104,13 +104,13 @@ export default function StationBoard({ station }: StationBoardProps) {
               src={walkIcon}
               alt="Walking"
               style={{
-                height: '20px',
+                height: '10px',
                 width: 'auto',
                 opacity: 0.7,
                 objectFit: 'contain'
               }}
             />
-            <span>{station.walkingMinutes} min</span>
+            <span>{station.walkingMinutes}m</span>
           </div>
         )}
       </div>
@@ -121,9 +121,9 @@ export default function StationBoard({ station }: StationBoardProps) {
           flexDirection: 'row',
         }}
       >
-        {renderTrainList(uptownTrains, 'Manhattan / Uptown')}
+        {renderTrainList(uptownTrains, 'Manhattan')}
         <div style={{ width: '1px', backgroundColor: '#444' }} />
-        {renderTrainList(downtownTrains, 'Brooklyn / Downtown')}
+        {renderTrainList(downtownTrains, 'Brooklyn')}
       </div>
     </div>
   );

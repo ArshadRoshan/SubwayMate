@@ -25,17 +25,21 @@ export default function TrainRow({ train }: TrainRowProps) {
       style={{
         display: 'flex',
         alignItems: 'center',
-        padding: '10px 12px',
+        padding: '3px 4px',
         borderBottom: '1px solid #333',
-        fontSize: '20px',
+        fontSize: '10px',
       }}
     >
-      <RouteBullet route={train.routeId} size="medium" />
+      <RouteBullet route={train.routeId} size="small" />
       <div
         style={{
-          marginLeft: '12px',
+          marginLeft: '4px',
           flex: 1,
           fontWeight: 500,
+          fontSize: '9px',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
         }}
       >
         {train.direction}
@@ -44,12 +48,13 @@ export default function TrainRow({ train }: TrainRowProps) {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
+          gap: '4px',
+          flexShrink: 0,
         }}
       >
         <div
           style={{
-            fontSize: '16px',
+            fontSize: '9px',
             color: '#888',
           }}
         >
@@ -57,10 +62,10 @@ export default function TrainRow({ train }: TrainRowProps) {
         </div>
         <div
           style={{
-            fontSize: '26px',
+            fontSize: '12px',
             fontWeight: 'bold',
             color: train.minutesUntilArrival <= 2 ? '#FFD700' : '#fff',
-            minWidth: '80px',
+            minWidth: '35px',
             textAlign: 'right',
           }}
         >
