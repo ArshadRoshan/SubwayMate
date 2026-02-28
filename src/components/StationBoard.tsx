@@ -6,6 +6,12 @@ interface StationBoardProps {
   station: Station;
 }
 
+interface GroupedTrain {
+  routeId: string;
+  direction: string;
+  arrivals: Array<{ arrivalTime: Date; minutesUntilArrival: number }>;
+}
+
 export default function StationBoard({ station }: StationBoardProps) {
   // Separate trains by direction
   const uptownTrains = station.trains.filter(train =>
@@ -22,28 +28,60 @@ export default function StationBoard({ station }: StationBoardProps) {
     train.direction.includes('Southbound')
   );
 
-  const renderTrainList = (trains: typeof station.trains) => (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-      <div style={{ flex: 1 }}>
-        {trains.length === 0 ? (
-          <div
-            style={{
-              padding: '8px',
-              textAlign: 'center',
-              color: '#666',
-              fontSize: '10px',
-            }}
-          >
-            No trains
-          </div>
-        ) : (
-          trains.slice(0, 2).map((train, index) => (
-            <TrainRow key={index} train={train} />
-          ))
-        )}
+  // Group trains by route and direction
+  const groupTrains = (trains: typeof station.trains): GroupedTrain[] => {
+    const groups = new Map<string, GroupedTrain>();
+
+    trains.forEach(train => {
+      const key = `${train.routeId}-${train.direction}`;
+      if (!groups.has(key)) {
+        groups.set(key, {
+          routeId: train.routeId,
+          direction: train.direction,
+          arrivals: [],
+        });
+      }
+      groups.get(key)!.arrivals.push({
+        arrivalTime: train.arrivalTime,
+        minutesUntilArrival: train.minutesUntilArrival,
+      });
+    });
+
+    // Convert to array, sort alphabetically by route, and limit to 2 arrivals per route
+    return Array.from(groups.values())
+      .sort((a, b) => a.routeId.localeCompare(b.routeId))
+      .map(group => ({
+        ...group,
+        arrivals: group.arrivals.slice(0, 2),
+      }));
+  };
+
+  const renderTrainList = (trains: typeof station.trains) => {
+    const groupedTrains = groupTrains(trains);
+
+    return (
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1 }}>
+          {groupedTrains.length === 0 ? (
+            <div
+              style={{
+                padding: '8px',
+                textAlign: 'center',
+                color: '#666',
+                fontSize: '10px',
+              }}
+            >
+              No trains
+            </div>
+          ) : (
+            groupedTrains.map((train, index) => (
+              <TrainRow key={index} train={train} />
+            ))
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div
