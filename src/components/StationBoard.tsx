@@ -22,20 +22,8 @@ export default function StationBoard({ station }: StationBoardProps) {
     train.direction.includes('Southbound')
   );
 
-  const renderTrainList = (trains: typeof station.trains, title: string) => (
+  const renderTrainList = (trains: typeof station.trains) => (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-      <div
-        style={{
-          padding: '3px 4px',
-          backgroundColor: '#222',
-          borderBottom: '1px solid #444',
-          fontSize: '9px',
-          fontWeight: 'bold',
-          color: '#aaa',
-        }}
-      >
-        {title}
-      </div>
       <div style={{ flex: 1 }}>
         {trains.length === 0 ? (
           <div
@@ -49,7 +37,7 @@ export default function StationBoard({ station }: StationBoardProps) {
             No trains
           </div>
         ) : (
-          trains.slice(0, 5).map((train, index) => (
+          trains.slice(0, 2).map((train, index) => (
             <TrainRow key={index} train={train} />
           ))
         )}
@@ -121,9 +109,9 @@ export default function StationBoard({ station }: StationBoardProps) {
           flexDirection: 'row',
         }}
       >
-        {renderTrainList(uptownTrains, 'Manhattan')}
+        {renderTrainList(uptownTrains)}
         <div style={{ width: '1px', backgroundColor: '#444' }} />
-        {renderTrainList(downtownTrains, 'Brooklyn')}
+        {renderTrainList(downtownTrains)}
       </div>
     </div>
   );

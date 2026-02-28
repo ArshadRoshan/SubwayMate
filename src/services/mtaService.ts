@@ -66,12 +66,12 @@ function getDirectionName(stopId: string, routeId: string): string {
       return 'Manhattan';
     }
     if (['A', 'C', 'E'].includes(routeId)) {
-      return 'Uptown';
+      return 'Uptown & The Bronx';
     }
     if (['F', 'M'].includes(routeId)) {
       return 'Manhattan';
     }
-    return 'Uptown';
+    return 'Northbound';
   } else {
     // Southbound
     if (['B', 'D', 'N', 'Q', 'R', 'W'].includes(routeId)) {
@@ -81,9 +81,9 @@ function getDirectionName(stopId: string, routeId: string): string {
       return 'Brooklyn';
     }
     if (['F'].includes(routeId)) {
-      return 'Coney Is.';
+      return 'Coney Island';
     }
-    return 'Downtown';
+    return 'Southbound';
   }
 }
 
