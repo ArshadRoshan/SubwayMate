@@ -6,12 +6,6 @@ interface StationBoardProps {
   station: Station;
 }
 
-interface GroupedTrain {
-  routeId: string;
-  direction: string;
-  arrivals: Array<{ arrivalTime: Date; minutesUntilArrival: number }>;
-}
-
 export default function StationBoard({ station }: StationBoardProps) {
   // Separate trains by direction
   const uptownTrains = station.trains.filter(train =>
@@ -28,60 +22,26 @@ export default function StationBoard({ station }: StationBoardProps) {
     train.direction.includes('Southbound')
   );
 
-  // Group trains by route and direction
-  const groupTrains = (trains: typeof station.trains): GroupedTrain[] => {
-    const groups = new Map<string, GroupedTrain>();
-
-    trains.forEach(train => {
-      const key = `${train.routeId}-${train.direction}`;
-      if (!groups.has(key)) {
-        groups.set(key, {
-          routeId: train.routeId,
-          direction: train.direction,
-          arrivals: [],
-        });
-      }
-      groups.get(key)!.arrivals.push({
-        arrivalTime: train.arrivalTime,
-        minutesUntilArrival: train.minutesUntilArrival,
-      });
-    });
-
-    // Convert to array, sort alphabetically by route, and limit to 2 arrivals per route
-    return Array.from(groups.values())
-      .sort((a, b) => a.routeId.localeCompare(b.routeId))
-      .map(group => ({
-        ...group,
-        arrivals: group.arrivals.slice(0, 2),
-      }));
-  };
-
-  const renderTrainList = (trains: typeof station.trains) => {
-    const groupedTrains = groupTrains(trains);
-
-    return (
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <div style={{ flex: 1 }}>
-          {groupedTrains.length === 0 ? (
-            <div
-              style={{
-                padding: '8px',
-                textAlign: 'center',
-                color: '#666',
-                fontSize: '14px',
-              }}
-            >
-              No trains
-            </div>
-          ) : (
-            groupedTrains.map((train, index) => (
-              <TrainRow key={index} train={train} />
-            ))
-          )}
+  const renderTrainList = (trains: typeof station.trains) => (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      {trains.length === 0 ? (
+        <div
+          style={{
+            padding: '8px',
+            textAlign: 'center',
+            color: '#666',
+            fontSize: '14px',
+          }}
+        >
+          No trains
         </div>
-      </div>
-    );
-  };
+      ) : (
+        trains.slice(0, 3).map((train, index) => (
+          <TrainRow key={index} train={train} />
+        ))
+      )}
+    </div>
+  );
 
   return (
     <div
@@ -108,7 +68,7 @@ export default function StationBoard({ station }: StationBoardProps) {
       >
         <h2
           style={{
-            fontSize: '22px',
+            fontSize: '24px',
             fontWeight: 'bold',
             margin: 0,
           }}
@@ -121,7 +81,7 @@ export default function StationBoard({ station }: StationBoardProps) {
               display: 'flex',
               alignItems: 'center',
               gap: '2px',
-              fontSize: '15px',
+              fontSize: '16px',
               color: '#888',
               fontWeight: 500,
             }}
@@ -145,6 +105,7 @@ export default function StationBoard({ station }: StationBoardProps) {
           flex: 1,
           display: 'flex',
           flexDirection: 'row',
+          overflow: 'hidden',
         }}
       >
         {renderTrainList(uptownTrains)}

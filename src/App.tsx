@@ -135,7 +135,7 @@ function App() {
       >
         <div
           style={{
-            fontSize: '18px',
+            fontSize: '20px',
             color: '#888',
             fontWeight: 500,
           }}
@@ -144,7 +144,7 @@ function App() {
         </div>
         <div
           style={{
-            fontSize: '18px',
+            fontSize: '20px',
             display: 'flex',
             alignItems: 'center',
             gap: '4px',
