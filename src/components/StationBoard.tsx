@@ -63,7 +63,7 @@ export default function StationBoard({ station }: StationBoardProps) {
           flexShrink: 0,
           display: 'flex',
           alignItems: 'center',
-          gap: '4px',
+          gap: '24px',
         }}
       >
         <h2
@@ -80,7 +80,7 @@ export default function StationBoard({ station }: StationBoardProps) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '2px',
+              gap: '6px',
               fontSize: '16px',
               color: '#888',
               fontWeight: 500,
