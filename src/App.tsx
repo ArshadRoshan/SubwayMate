@@ -115,8 +115,7 @@ function App() {
     <div
       style={{
         height: '100vh',
-        padding: '12px',
-        paddingBottom: '60px',
+        padding: '4px',
         backgroundColor: '#000',
         display: 'flex',
         flexDirection: 'column',
@@ -124,21 +123,45 @@ function App() {
     >
       <header
         style={{
-          marginBottom: '12px',
+          marginBottom: '4px',
           display: 'flex',
-          justifyContent: 'flex-end',
+          justifyContent: 'space-between',
           alignItems: 'center',
           flexShrink: 0,
+          padding: '2px 4px',
+          backgroundColor: '#1a1a1a',
+          borderRadius: '2px',
         }}
       >
         <div
           style={{
-            fontSize: '20px',
+            fontSize: '10px',
             color: '#888',
             fontWeight: 500,
           }}
         >
           {formatClock(currentTime)}
+        </div>
+        <div
+          style={{
+            fontSize: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}
+        >
+          {isLoading && <span style={{ color: '#888' }}>Loading...</span>}
+          {!isLoading && useMockData && (
+            <span style={{ color: '#FFD700' }}>Mock Data</span>
+          )}
+          {!isLoading && !useMockData && lastUpdate && (
+            <span style={{ color: '#6CBE45' }}>
+              Live • {lastUpdate.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit'
+              })}
+            </span>
+          )}
         </div>
       </header>
 
@@ -155,35 +178,6 @@ function App() {
         ))}
       </main>
 
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '10px',
-          right: '10px',
-          padding: '8px 12px',
-          backgroundColor: '#333',
-          borderRadius: '4px',
-          fontSize: '12px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '4px',
-        }}
-      >
-        {useMockData && (
-          <div style={{ color: '#FFD700' }}>Using Mock Data</div>
-        )}
-        {!useMockData && lastUpdate && (
-          <div style={{ color: '#6CBE45' }}>
-            Live • Updated {lastUpdate.toLocaleTimeString('en-US', {
-              hour: 'numeric',
-              minute: '2-digit'
-            })}
-          </div>
-        )}
-        {isLoading && (
-          <div style={{ color: '#888' }}>Loading...</div>
-        )}
-      </div>
     </div>
   );
 }

@@ -6,6 +6,12 @@ interface StationBoardProps {
   station: Station;
 }
 
+interface GroupedTrain {
+  routeId: string;
+  direction: string;
+  arrivals: Array<{ arrivalTime: Date; minutesUntilArrival: number }>;
+}
+
 export default function StationBoard({ station }: StationBoardProps) {
   // Separate trains by direction
   const uptownTrains = station.trains.filter(train =>
@@ -22,48 +28,68 @@ export default function StationBoard({ station }: StationBoardProps) {
     train.direction.includes('Southbound')
   );
 
-  const renderTrainList = (trains: typeof station.trains, title: string) => (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-      <div
-        style={{
-          padding: '8px 12px',
-          backgroundColor: '#222',
-          borderBottom: '1px solid #444',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          color: '#aaa',
-        }}
-      >
-        {title}
+  // Group trains by route and direction
+  const groupTrains = (trains: typeof station.trains): GroupedTrain[] => {
+    const groups = new Map<string, GroupedTrain>();
+
+    trains.forEach(train => {
+      const key = `${train.routeId}-${train.direction}`;
+      if (!groups.has(key)) {
+        groups.set(key, {
+          routeId: train.routeId,
+          direction: train.direction,
+          arrivals: [],
+        });
+      }
+      groups.get(key)!.arrivals.push({
+        arrivalTime: train.arrivalTime,
+        minutesUntilArrival: train.minutesUntilArrival,
+      });
+    });
+
+    // Convert to array, sort alphabetically by route, and limit to 2 arrivals per route
+    return Array.from(groups.values())
+      .sort((a, b) => a.routeId.localeCompare(b.routeId))
+      .map(group => ({
+        ...group,
+        arrivals: group.arrivals.slice(0, 2),
+      }));
+  };
+
+  const renderTrainList = (trains: typeof station.trains) => {
+    const groupedTrains = groupTrains(trains);
+
+    return (
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1 }}>
+          {groupedTrains.length === 0 ? (
+            <div
+              style={{
+                padding: '8px',
+                textAlign: 'center',
+                color: '#666',
+                fontSize: '10px',
+              }}
+            >
+              No trains
+            </div>
+          ) : (
+            groupedTrains.map((train, index) => (
+              <TrainRow key={index} train={train} />
+            ))
+          )}
+        </div>
       </div>
-      <div style={{ flex: 1 }}>
-        {trains.length === 0 ? (
-          <div
-            style={{
-              padding: '16px',
-              textAlign: 'center',
-              color: '#666',
-              fontSize: '14px',
-            }}
-          >
-            No trains
-          </div>
-        ) : (
-          trains.slice(0, 5).map((train, index) => (
-            <TrainRow key={index} train={train} />
-          ))
-        )}
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div
       style={{
         backgroundColor: '#1a1a1a',
-        borderRadius: '6px',
+        borderRadius: '3px',
         overflow: 'hidden',
-        marginBottom: '12px',
+        marginBottom: '4px',
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
@@ -71,18 +97,18 @@ export default function StationBoard({ station }: StationBoardProps) {
     >
       <div
         style={{
-          padding: '10px 16px',
+          padding: '4px 6px',
           backgroundColor: '#2a2a2a',
-          borderBottom: '2px solid #444',
+          borderBottom: '1px solid #444',
           flexShrink: 0,
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
+          gap: '4px',
         }}
       >
         <h2
           style={{
-            fontSize: '24px',
+            fontSize: '11px',
             fontWeight: 'bold',
             margin: 0,
           }}
@@ -94,8 +120,8 @@ export default function StationBoard({ station }: StationBoardProps) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              fontSize: '16px',
+              gap: '2px',
+              fontSize: '9px',
               color: '#888',
               fontWeight: 500,
             }}
@@ -104,13 +130,13 @@ export default function StationBoard({ station }: StationBoardProps) {
               src={walkIcon}
               alt="Walking"
               style={{
-                height: '20px',
+                height: '10px',
                 width: 'auto',
                 opacity: 0.7,
                 objectFit: 'contain'
               }}
             />
-            <span>{station.walkingMinutes} min</span>
+            <span>{station.walkingMinutes}m</span>
           </div>
         )}
       </div>
@@ -121,9 +147,9 @@ export default function StationBoard({ station }: StationBoardProps) {
           flexDirection: 'row',
         }}
       >
-        {renderTrainList(uptownTrains, 'Manhattan / Uptown')}
+        {renderTrainList(uptownTrains)}
         <div style={{ width: '1px', backgroundColor: '#444' }} />
-        {renderTrainList(downtownTrains, 'Brooklyn / Downtown')}
+        {renderTrainList(downtownTrains)}
       </div>
     </div>
   );
